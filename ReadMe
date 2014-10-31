@@ -1,0 +1,3 @@
+Libraries required: AWS-JDK, Twitter4J
+GetTweets.java get tweets and stroes into dynamoDB
+index.jsp and index.java are servlets in the WebProject.
