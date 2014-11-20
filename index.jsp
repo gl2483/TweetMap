@@ -95,7 +95,7 @@
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
     <script type="text/javascript" >
-    	var locations = <%= arr %>
+    	var locations = new Array(); 
 		function initialize() {
 				        var mapOptions = {
 				          center: { lat: 40.7127837, lng: -74.0059413},
@@ -105,21 +105,50 @@
 				            mapOptions);
 				        
 				        for (var i = 0; i < locations.length; i++) {
+				        	var a = locations[i][0];
 				        	var marker = new google.maps.Marker({
-				        		position: new google.maps.LatLng(locations[i][0], locations[i][1]),
+				        		position: new google.maps.LatLng(locations[i][2], locations[i][3]),
 				        		map: map
 				        	});
 				        }
 					}
-		google.maps.event.addDomListener(window, 'load', initialize);
+		//google.maps.event.addDomListener(window, 'load', initialize);
 		$(function() {
 			$( "#date" ).datepicker();
 			$( "#key" ).selectmenu();
 		});
+		
+
+		function start() {
+			if (typeof(EventSource) !== "undefined") {
+	        var eventSource = new EventSource("index");
+	         
+	        eventSource.onmessage = function(event) {
+	         	string = event.data.replace(/[\[]/g,'').replace(/[\]]/g,'').replace(/'/g,'').split(',');
+	         	//locations = string
+	         	for(var i = 0; i < string.length; i=i+4){
+	         		var item = new Array();
+	         		for(var j = 0; j < 4; j++){
+	         			item[j] = string[i+j];
+	         		}
+	         		locations[i/4] = item;
+	         	}
+	         	initialize();
+	            //document.getElementById('foo').innerHTML = locations + "</br>";
+	            //document.getElementById('array').innerHTML = event.array + "</br>";
+	        };
+	        } else {
+	        	document.getElementById('foo').innerHTML = "Sorry, Server-Sent Event is not supported in your browser";
+	        }
+	         
+	    }
+		window.addEventListener("load", start);
 	</script>
 	<style>fieldset {border: 0;}label {display: block;margin: 30px 0 0 0;}select {width: 200px;}.overflow {height: 200px;}</style>
 </head>
 <body>
+Time: <span id="foo"></span>
+array: <span id="array"></span>
 <table>
 	<tr>
 		<td>
