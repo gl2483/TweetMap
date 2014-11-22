@@ -56,6 +56,8 @@ public class index extends HttpServlet {
     
     private AmazonEC2         ec2;
     private AmazonDynamoDB dynamo;
+    private String pDate;
+    private String pKeystring;
     
     
 	
@@ -81,9 +83,18 @@ public class index extends HttpServlet {
               ArrayList<String> arr = new ArrayList<String>();
               DateFormat cf = new SimpleDateFormat("MM/dd/yyyy");
           	  String currDate = cf.format(new Date());
+          	  if(pDate != null && !pDate.isEmpty())
+          		  currDate = pDate;
+          	  /*String pKey;
+          	  if(pKeystring != null && !pKeystring.isEmpty())	  
+          		  	pKey = pKeystring;*/
+          	  
+          	  Condition keyCondition = new Condition().withComparisonOperator(ComparisonOperator.EQ.toString()).withAttributeValueList(new AttributeValue().withS(pKeystring));
               Condition dateCondition = new Condition().withComparisonOperator(ComparisonOperator.EQ.toString()).withAttributeValueList(new AttributeValue().withS(currDate));
               Map<String,Condition> scanCondition = new HashMap<String,Condition>();
               scanCondition.put("Date", dateCondition);
+              if(pKeystring != null && !pKeystring.isEmpty())
+            	  scanCondition.put("KeyString", keyCondition);
               ScanRequest scanRequest = new ScanRequest().withTableName("TweetInfo").withAttributesToGet(new String []{"KeyString","Date","Longtitude","Latitude"}).withScanFilter(scanCondition);
               
               ScanResult result = dynamo.scan(scanRequest);
@@ -121,6 +132,7 @@ public class index extends HttpServlet {
 		response.setContentType("text/event-stream");
 		response.setCharacterEncoding("UTF-8");
 		request.setAttribute("org.apache.catalina.ASYNC_SUPPORTED", true);
+		//pDate = request.getParameter("date");
 		final AsyncContext ac = request.startAsync();
 		ac.setTimeout(0);
 		ac.addListener(new AsyncListener() {
@@ -161,10 +173,12 @@ public class index extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String date = request.getParameter("date");
-		String key = request.getParameter("key");
-		request.setAttribute("date", date);
+		//String date = request.getParameter("date");
+		pKeystring = request.getParameter("key");
+		//request.setAttribute("date", date);
+		pDate = request.getParameter("date");
 		request.getRequestDispatcher("index.jsp").forward(request,response);
+		//doGet(request,response);
 	}
 
 }
