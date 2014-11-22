@@ -61,27 +61,27 @@
 	if(pDate.length() == 0)
 		pDate = currDate;
 	
-	Condition keyCondition = new Condition().withComparisonOperator(ComparisonOperator.EQ.toString()).withAttributeValueList(new AttributeValue().withS(pKey));
-	Condition dateCondition = new Condition().withComparisonOperator(ComparisonOperator.EQ.toString()).withAttributeValueList(new AttributeValue().withS(pDate));
-	Map<String,Condition> scanCondition = new HashMap<String,Condition>();
-	if(pKey.length() != 0)
-		scanCondition.put("KeyString", keyCondition);
-	if(pDate.length() != 0)
-		scanCondition.put("Date", dateCondition);
-	ArrayList<String> arr = new ArrayList<String>();
+	//Condition keyCondition = new Condition().withComparisonOperator(ComparisonOperator.EQ.toString()).withAttributeValueList(new AttributeValue().withS(pKey));
+	//Condition dateCondition = new Condition().withComparisonOperator(ComparisonOperator.EQ.toString()).withAttributeValueList(new AttributeValue().withS(pDate));
+	//Map<String,Condition> scanCondition = new HashMap<String,Condition>();
+	//if(pKey.length() != 0)
+		//scanCondition.put("KeyString", keyCondition);
+	//if(pDate.length() != 0)
+		//scanCondition.put("Date", dateCondition);
+	//ArrayList<String> arr = new ArrayList<String>();
 	//HashMap<String, AttributeValue> expression = new HashMap<String, AttributeValue>();
 	//expression.put("KeyString", new AttributeValue().withS("NFL"));
 	//key.put("KeyString", new AttributeValue().withS("Hahaha"));
-	ScanRequest scanRequest = new ScanRequest()
-	.withTableName("TweetInfo").withAttributesToGet(new String []{"KeyString","Date","Longtitude","Latitude"}).withScanFilter(scanCondition);
+	//ScanRequest scanRequest = new ScanRequest()
+	//.withTableName("TweetInfo").withAttributesToGet(new String []{"KeyString","Date","Longtitude","Latitude"}).withScanFilter(scanCondition);
 	//.withFilterExpression("KeyString equal NFL");
 	
-	ScanResult result = dynamo.scan(scanRequest);
-	for(Map<String, AttributeValue> item : result.getItems())
-	{
-		if(item.values().size() == 4)
-		arr.add(item.values().toString().replace("'", "").replace("{S: ", "'").replace(",}", "'"));
-	}
+	//ScanResult result = dynamo.scan(scanRequest);
+	//for(Map<String, AttributeValue> item : result.getItems())
+	//{
+		//if(item.values().size() == 4)
+		//arr.add(item.values().toString().replace("'", "").replace("{S: ", "'").replace(",}", "'"));
+	//}
 %>
 
 <!DOCTYPE html>
@@ -107,7 +107,7 @@
 				        for (var i = 0; i < locations.length; i++) {
 				        	var a = locations[i][0];
 				        	var marker = new google.maps.Marker({
-				        		position: new google.maps.LatLng(locations[i][2], locations[i][3]),
+				        		position: new google.maps.LatLng(locations[i][0], locations[i][1]),
 				        		map: map
 				        	});
 				        }
